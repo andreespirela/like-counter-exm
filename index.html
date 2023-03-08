@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Post Card</title>
+    <style>
+      /* Center the container */
+      .container {
+        width: 500px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      /* Style the image */
+      .post-img {
+        width: 100%;
+        height: auto;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      /* Style the title */
+      .post-title {
+        font-size: 24px;
+        margin: 10px 0;
+      }
+      /* Style the like button container */
+      .like-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #f2f2f2;
+      }
+      /* Style the like button */
+      .like-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+        transition: color 0.2s ease-in-out;
+      }
+      /* Style the heart icon */
+      .heart-icon {
+        width: 24px;
+        height: 24px;
+        fill: #e74c3c;
+        margin-right: 10px;
+        transition: fill 0.2s ease-in-out;
+      }
+      /* Style the like count */
+      .like-count {
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+        margin-right: 10px;
+      }
+      /* Hover effect for like button */
+      .like-btn:hover {
+        color: #e74c3c;
+      }
+      .like-btn:hover .heart-icon {
+        fill: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img class="post-img" src="https://picsum.photos/500/300" alt="Post Image">
+      <h2 class="post-title">Post Title</h2>
+      <div class="like-container">
+        <button class="like-btn" id="like">
+          <svg class="heart-icon" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.43 2 12.35 2 8.77 2 5.87 3.86 4 6.22 4c1.93 0 3.7 1.05 4.78 2.72C12.07 5.05 13.84 4 15.77 4 18.13 4 20 5.87 20 8.77c0 3.58-3.4 6.66-8.55 11.26L12 21.35z"/>
+          </svg>
+          <span class="like-count" id="like-count">0</span>
+        </button>
+    </div>
+ </div>
+<script>
+    const functionId = "x6ajf7cfbty7a2mlqaevnbn4f9ye2jw2fp3beu260au";
+    const functionUrl = `https://${functionId}.exm.run`;
+    addEventListener("load", (event) => {
+        fetch(functionUrl).then(async (rep) => {
+            const stateData = await rep.json();
+            document.getElementById("like-count").textContent = stateData.posts['A-1'].likes;
+        });
+    });
+    document.getElementById("like").addEventListener("click", () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        fetch(functionUrl, {
+            method: "POST",
+            body: JSON.stringify({
+                id: "A-1"
+            }),
+            headers: myHeaders
+        }).then(async (rep) => {
+            const repJson = await rep.json();
+            const state = repJson.data.execution.state;
+            const currentLikes = state.posts['A-1'].likes;
+            document.getElementById("like-count").textContent = currentLikes;
+        });
+    });
+</script>
+</body>
